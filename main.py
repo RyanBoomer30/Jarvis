@@ -9,6 +9,7 @@ import os
 import time
 from youtube_search import YoutubeSearch
 import webbrowser
+from Gmail import gmail
 
 engine = pyttsx3.init("sapi5")
 voices = engine.getProperty("voices")
@@ -38,7 +39,7 @@ def takeCommand():
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
-        r.pause_threshold = 1
+        r.pause_threshold = 0.75
         audio = r.listen(source)
 
     try:
@@ -63,12 +64,16 @@ if __name__ == "__main__":
         if 'wake up' in query:
             switch = 1
             wishMe()
+        elif 'introduce yourself' in query:
+            speak("Hi, I am Jarvis, people like to think I am an AI but I am actually Ryan slave")
         elif 'look up' in query:
-            search = query[8:]
+            search = query[query.find('look up')+8:]
             audio = "Looking up " + search
             speak(audio)
+            query = query[query.find('look up'):]
             query = query.replace("wikipedia", "")
             results = wikipedia.summary(query, sentences=2)
+            print(query)
             engine.setProperty("rate", 165)
             audio = "According to Wikipedia" + results
             speak(audio)
@@ -83,8 +88,8 @@ if __name__ == "__main__":
             speak("Opened google")
 
         elif 'play' in query:
-            search_keyword = query[5:]
-            results = YoutubeSearch(search_keyword, max_results=1).to_dict()
+            search = query[query.find('play')+5:]
+            results = YoutubeSearch(search, max_results=1).to_dict()
             for v in results:
                 search_result = 'https://www.youtube.com/watch?v=' + v['id']
                 webbrowser.get(chrome_path).open(search_result)
@@ -95,6 +100,12 @@ if __name__ == "__main__":
         elif 'time' in query:
             time = datetime.datetime.now().strftime("%H:%M")
             speak(f"Sir, it is currently {time}")
+
+        elif 'free' in query:
+            speak("If we are not counting social media and Youtube, you average about 2 hours of free time during weekday and 6 hours during weekend")
+
+        elif 'gmail' in query:
+            gmail()
 
         elif 'sleep' in query:
             speak("I am going to take a nap")
