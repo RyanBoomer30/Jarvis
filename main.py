@@ -101,9 +101,6 @@ if __name__ == "__main__":
             time = datetime.datetime.now().strftime("%H:%M")
             speak(f"Sir, it is currently {time}")
 
-        elif 'free' in query:
-            speak("If we are not counting social media and Youtube, you average about 2 hours of free time during weekday and 6 hours during weekend")
-
         elif 'gmail' in query:
             gmail()
 
